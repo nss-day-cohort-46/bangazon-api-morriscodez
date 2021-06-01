@@ -1,5 +1,6 @@
 """View module for handling requests about customer profiles"""
 import datetime
+import re
 from django.http import HttpResponseServerError
 from django.contrib.auth.models import User
 from rest_framework import serializers, status
@@ -38,6 +39,7 @@ class Profile(ViewSet):
         @apiSuccess (200) {String} address Customer address
         @apiSuccess (200) {Object[]} payment_types Array of user's payment types
         @apiSuccess (200) {Object[]} recommends Array of recommendations made by the user
+        @apiSuccess (200) {object[]} recommended Array of recommendations other users made for the authenticated user
 
         @apiSuccessExample {json} Success
             HTTP/1.1 200 OK
@@ -257,7 +259,7 @@ class Profile(ViewSet):
 
         return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get', 'post'], detail=False)
     def favoritesellers(self, request):
         """
         @api {GET} /profile/favoritesellers GET favorite sellers
@@ -305,12 +307,36 @@ class Profile(ViewSet):
                 }
             ]
         """
-        customer = Customer.objects.get(user=request.auth.user)
-        favorites = Favorite.objects.filter(customer=customer)
+        if request.method == 'GET':
 
-        serializer = FavoriteSerializer(
-            favorites, many=True, context={'request': request})
-        return Response(serializer.data)
+        
+            customer = Customer.objects.get(user=request.auth.user)
+            favorites = Favorite.objects.filter(customer=customer)
+            
+            
+
+            serializer = FavoriteSerializer(
+                favorites, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        
+        if request.method == 'POST':
+
+            sellerId = request.data["seller"]
+            customer = Customer.objects.get(user=request.auth.user)
+            seller = Customer.objects.get(pk=sellerId)
+            
+            favorite = Favorite()
+            favorite.customer = customer
+            favorite.seller = seller
+
+            favorite.save()
+
+            serializer = FavoriteSerializer(
+                favorite, many=False, context={'request': request}
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 class LineItemSerializer(serializers.HyperlinkedModelSerializer):
