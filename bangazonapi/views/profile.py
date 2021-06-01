@@ -376,8 +376,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'url', 'user', 'phone_number',
-                  'address', 'payment_types', 'recommends',)
+                    'address', 'payment_types', 'recommends',)
         depth = 1
+        #! Is this a bug? Why have depth=1 when user is in the serializer?
 
 
 class FavoriteUserSerializer(serializers.HyperlinkedModelSerializer):
