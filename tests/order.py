@@ -95,29 +95,29 @@ class OrderTests(APITestCase):
 
     # TODO: Complete order by adding payment type
 
-    # def test_add_payment_type(self):
-    #     """
-    #     Ensure we can add a payment type to an order
-    #     """
+    def test_add_payment_type(self):
+        """
+        Ensure we can add a payment type to an order
+        """
 
-    #     #Add a product
-    #     self.test_add_product_to_order()
+        #Add a product
+        self.test_add_product_to_order()
 
-    #     #Add payment type
-    #     url = "/orders/1"
-    #     data={
+        #Add payment type
+        url = "/orders/1"
+        data={
             
-    #         "payment_type": 1,
-    #     }
+            "payment_type": 1,
+        }
 
-    #     self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-    #     response = self.client.put(url, data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    #     response = self.client.get("/orders/1")
-    #     json_response = json.loads(response.content)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(json_response["payment_type"], self.payment_type)
+        response = self.client.get("/orders/1")
+        json_response = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(json_response["payment_type"], self.payment_type["url"])
 
 
     # TODO: New line item is not added to closed order
