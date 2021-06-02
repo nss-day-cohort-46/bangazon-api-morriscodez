@@ -428,7 +428,7 @@ class FavoriteUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username')
-        depth = 1
+        # depth = 1
 
 
 class FavoriteSellerSerializer(serializers.HyperlinkedModelSerializer):
@@ -443,7 +443,7 @@ class FavoriteSellerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Customer
         fields = ('id', 'url', 'user',)
-        depth = 1
+        # depth = 1
 
 
 class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
@@ -458,4 +458,4 @@ class FavoriteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Favorite
         fields = ('id', 'seller')
-        depth = 2
+        # depth = 2
