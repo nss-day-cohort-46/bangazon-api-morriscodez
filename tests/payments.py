@@ -50,7 +50,7 @@ class PaymentTests(APITestCase):
         payment_type = Payment()
         payment_type.merchant_name = "BTC"
         payment_type.account_number = "1234567"
-        payment_type.customer_id = 1,
+        payment_type.customer_id = 1
         payment_type.expiration_date = "2021-12-12"
         payment_type.create_date = "2020-01-01"
         payment_type.save()
