@@ -29,6 +29,20 @@ class OrderTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+        # Create a payment type
+        url = "/paymenttypes"
+        data={
+            
+            "merchant_name": "Amex",
+            "account_number": "000000000000",
+            "expiration_date": "2023-12-12",
+            "create_date": "2017-11-11"
+        }
+        response = self.client.post(url, data, format='json')
+        json_response = json.loads(response.content)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
 
     def test_add_product_to_order(self):
         """
@@ -80,5 +94,33 @@ class OrderTests(APITestCase):
         self.assertEqual(len(json_response["lineitems"]), 0)
 
     # TODO: Complete order by adding payment type
+
+    def test_add_payment_type(self):
+        """
+        Ensure we can add a payment type to an order
+        """
+
+        #Add a product
+        self.test_add_product_to_order()
+
+        #Add payment type
+        url = "/paymenttypes"
+        data={
+            
+            "merchant_name": "BTC",
+            "account_number": "000000000001",
+            "expiration_date": "2999-12-31",
+            "create_date": "2017-11-11"
+        }
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.post(url, data, format='json')
+        json_response = json.loads(response.content)
+
+        self.assertEqual(json_response["merchant_name"], "BTC")
+        self.assertEqual(json_response["account_number"], "000000000001")
+        self.assertEqual(json_response["expiration_date"], "2999-12-31")
+        self.assertEqual(json_response["create_date"], "2017-11-11")
+
 
     # TODO: New line item is not added to closed order
