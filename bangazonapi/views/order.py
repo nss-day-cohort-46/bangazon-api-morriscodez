@@ -103,9 +103,18 @@ class Orders(ViewSet):
             HTTP/1.1 204 No Content
         """
         customer = Customer.objects.get(user=request.auth.user)
-        order = Order.objects.get(pk=pk, customer=customer)
-        order.payment_type = request.data["payment_type"]
-        order.save()
+        
+        try:
+            order = Order.objects.get(pk=pk, customer=customer, payment_type__isnull=True)
+            order.payment_type = request.data["payment_type"]
+            order.save()
+
+        except Exception as ex:
+            return Response({"Error: Order is closed."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        
+        
+        
+
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
