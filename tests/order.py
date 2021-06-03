@@ -83,4 +83,5 @@ class OrderTests(APITestCase):
 
     # TODO: New line item is not added to closed order
 
-    
+    def test_new_line_item_to_order(self):
+        
