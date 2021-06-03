@@ -104,13 +104,11 @@ class Orders(ViewSet):
         """
         customer = Customer.objects.get(user=request.auth.user)
         
-        try:
-            order = Order.objects.get(pk=pk, customer=customer, payment_type__isnull=True)
-            order.payment_type = request.data["payment_type"]
-            order.save()
+        
+        order = Order.objects.get(pk=pk, customer=customer)
+        order.payment_type = Payment.objects.get(pk=request.data["payment_type"])
+        order.save()
 
-        except Exception as ex:
-            return Response({"Error: Order is closed."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         
         
         
