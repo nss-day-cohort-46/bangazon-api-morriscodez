@@ -8,3 +8,4 @@ INSERT INTO bangazonapi_recommendation (customer_id, product_id, recommender_id)
 VALUES (6, 11, 5);
 INSERT INTO bangazonapi_recommendation (customer_id, product_id, recommender_id)
 VALUES (7, 17, 5);
+
