@@ -8,7 +8,7 @@ from bangazonapi.models import Order, order
 from bangazonreports.views import Connection
 
 
-def SQLcompletedorders_list(request):
+def sqlcompletedorders_list(request):
     if request.method == 'GET':
         # Connect to project database
         with sqlite3.connect(Connection.db_path) as conn:
