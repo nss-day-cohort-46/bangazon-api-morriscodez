@@ -11,6 +11,7 @@ from rest_framework import status
 from bangazonapi.models import Product, Customer, ProductCategory, ProductRating
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.exceptions import ValidationError
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -104,6 +105,17 @@ class Products(ViewSet):
 
             new_product.image_path = data
 
+        try:
+            new_product.clean_fields(exclude='image_path')
+
+        except ValidationError as ex:
+            return Response(
+                {
+                    'message': ex.args[0]
+                }
+                )
+        
+        
         new_product.save()
 
         serializer = ProductSerializer(
@@ -250,6 +262,8 @@ class Products(ViewSet):
         order = self.request.query_params.get('order_by', None)
         direction = self.request.query_params.get('direction', None)
         number_sold = self.request.query_params.get('number_sold', None)
+        min_price = self.request.query_params.get('min_price', None)
+        location = self.request.query_params.get('location', None)
 
         if order is not None:
             order_filter = order
@@ -268,11 +282,17 @@ class Products(ViewSet):
 
         if number_sold is not None:
             def sold_filter(product):
-                if product.number_sold <= int(number_sold):
+                if product.number_sold >= int(number_sold):
                     return True
                 return False
 
             products = filter(sold_filter, products)
+
+        if min_price is not None:
+            products = products.filter(price__gte = min_price)
+
+        if location is not None:
+            products = products.filter(location__contains = location)
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})

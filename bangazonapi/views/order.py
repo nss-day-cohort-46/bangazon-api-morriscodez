@@ -103,8 +103,10 @@ class Orders(ViewSet):
             HTTP/1.1 204 No Content
         """
         customer = Customer.objects.get(user=request.auth.user)
+        
+        
         order = Order.objects.get(pk=pk, customer=customer)
-        order.payment_type = Payment.objects.get(pk = request.data["payment_type"])
+        order.payment_type = Payment.objects.get(pk=request.data["payment_type"])
         order.save()
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
