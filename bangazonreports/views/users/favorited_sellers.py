@@ -36,19 +36,29 @@ def favoritesellers_list(request):
 
             for row in dataset:
                 # Create a Game instance and set its properties
-                favorite = Customer()
-                fid = row["id"]
-                favorite.customer_name = row["Customer_Name"]
-                favorite.favorite_sellers = row["Seller_Name"]
+                customerID = row["id"]
                 
-                if fid in favorites_list:
-                    favorites_list[fid]["customer_name"]['favorite_sellers'].append(favorite.favorite_sellers)
+                favorite = {}
+                seller_name = row["seller_name"]
+
+                
+                if customerID in favorites_list:
+                    favorites_list[customerID]['favorite_sellers'].append(seller_name)
 
                 else:
-                    favorites_list[fid] = {}
-                    favorites_list[fid]["customer_name"] = row["Customer_Name"] 
-                    favorites_list[fid]["customer_name"]["favorite_sellers"] = row["favorite_sellers"]
+                    favorites_list[customerID] = {}
+                    favorites_list[customerID]["customer_name"] = row["customer_name"]
+                    favorites_list[customerID]["favorite_sellers"] = []
+                    favorites_list[customerID]['favorite_sellers'].append(seller_name)
 
+        #   {
+        #     id: {
+        #         customer_name: "",
+        #         favorites_sellers: [
+        #             "seller name", "seller name"
+        #         ]
+        #     }
+        #   }
                     
         
         # Get only the values from the dictionary and create a list from them
@@ -61,3 +71,4 @@ def favoritesellers_list(request):
         }
 
         return render(request, template, context)
+
