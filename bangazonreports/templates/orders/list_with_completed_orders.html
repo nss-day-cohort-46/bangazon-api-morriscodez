@@ -7,13 +7,14 @@
     </head>
     <body>
         <h1> Completed Orders</h1>
-            {% for order in order_list %}
+            {% for order in orders_list %}
                 <h2>Completed:</h2>
                     <ol>
                         <li>Order ID: {{order.id}}</li>
-                        <li>Customer ID: {{order.customer_id}}</li>
+                        <li>Customer Name: {{order.customer_name}}</li>
                         <li>Date Created: {{order.created_date}}</li>
-                        <li>Payment Type ID: {{order.payment_type_id}}</li>
+                        <li>Payment Type: {{order.merchant_name}}</li>
+                        <li>Total: ${{order.total_price}}</li>
                     </ol>
             {% endfor %}
     </body>
